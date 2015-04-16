@@ -64,7 +64,8 @@ namespace Better_CSharp_IRC_Bot
                     connectServer.IniReadValue("Config", "RealName"),
                     Convert.ToInt32(connectServer.IniReadValue("Config", "Port")), connectServer.IniReadValue("Config", "Owner")));
             }
-            //for (; ; ) { }
+            //At this point, many foreground threads are made for each server and channel, so the main thread can close and allow the server and
+            //channel threads to operate independently.
         }
     }
 }
