@@ -17,6 +17,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+#Directories in the source that hold build files
+bin
+
 # =========================
 # Operating System Files
 # =========================
