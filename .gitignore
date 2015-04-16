@@ -19,6 +19,7 @@ $RECYCLE.BIN/
 
 #Directories in the source that hold build files
 bin
+obj
 
 # =========================
 # Operating System Files
