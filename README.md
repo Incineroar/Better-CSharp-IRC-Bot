@@ -1,4 +1,4 @@
-# Better-C--IRC-Bot
+# Better C# IRC Bot
 This is a simple IRC bot written in C#. Functions:
 - Handles multiple server connections at once
 - Handles multiple channels on each server
