@@ -1,5 +1,0 @@
-C:\Users\Jordan\documents\visual studio 2010\Projects\Better CSharp IRC Bot\Better CSharp IRC Bot\bin\Debug\Better CSharp IRC Bot.exe
-C:\Users\Jordan\documents\visual studio 2010\Projects\Better CSharp IRC Bot\Better CSharp IRC Bot\bin\Debug\Better CSharp IRC Bot.pdb
-C:\Users\Jordan\documents\visual studio 2010\Projects\Better CSharp IRC Bot\Better CSharp IRC Bot\obj\x86\Debug\Better CSharp IRC Bot.exe
-C:\Users\Jordan\documents\visual studio 2010\Projects\Better CSharp IRC Bot\Better CSharp IRC Bot\obj\x86\Debug\Better CSharp IRC Bot.pdb
-C:\Users\Jordan\Documents\Visual Studio 2010\Projects\Better CSharp IRC Bot\Better CSharp IRC Bot\obj\x86\Debug\Better CSharp IRC Bot.csprojResolveAssemblyReference.cache
