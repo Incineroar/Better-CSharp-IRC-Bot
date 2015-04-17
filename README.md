@@ -1,7 +1,7 @@
 # Better C# IRC Bot
 This is a simple IRC bot written in C#. Functions:
 - Handles multiple server connections at once
-- Handles multiple channels on each server
+- Handles multiple channels on each server (This seems to be busted right now, I'm working on fixing this)
 - Incredibly well-threaded as to ensure all servers don't lose connection
 
 ## To be added:
