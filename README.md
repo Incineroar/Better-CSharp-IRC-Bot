@@ -1,8 +1,8 @@
 # Better C# IRC Bot
 This is a simple IRC bot written in C#. Functions:
-- Handles multiple server connections at once
+- Handles multiple server connections at once (This is working properly)
 - Handles multiple channels on each server (This seems to be busted right now, I'm working on fixing this)
-- Incredibly well-threaded as to ensure all servers don't lose connection
+- Incredibly well-threaded as to ensure all servers don't lose connection (Getting there)
 
 ## To be added:
 - More commands (Currently only responds to its own name as a quick test)
@@ -11,6 +11,11 @@ This is a simple IRC bot written in C#. Functions:
 - Error checking
 - Nickserv authentication for the bot (To prevent stealing of the bot's nick, password being set by admin of the bot)
 - More?
+
+## Bugs
+- Commands don't work on channels properly
+- Servers are being called incorrectly
+- Logging is in the process of being repaired
 
 ## To use this bot
 To run the bot on your own server, simply build and start the application and follow the simple startup guide in the command prompt window. After the initial setup, it will save your settings to the application's directory, then hook up to the server that you defined. You must be running .NET 4 at minimum (Although if you adjust this in the Properties, you may be able to get it to build with an older version of .NET).
