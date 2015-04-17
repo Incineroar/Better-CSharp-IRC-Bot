@@ -94,6 +94,7 @@ namespace Better_CSharp_IRC_Bot
                             Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\logs\\");
                         }
                         File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\logs\\" + DateTime.Now.ToString("dd-MM-yyyy") + ".txt", "[CHANNEL CLASS] [" + System.DateTime.Now.ToShortTimeString() + "] " + buf + Environment.NewLine);
+                        
                     }
                     if (!buf.Equals(""))
                     {
