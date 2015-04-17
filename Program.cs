@@ -17,25 +17,33 @@ namespace Better_CSharp_IRC_Bot
             List<Server> serverConnections = new List<Server>();
             string appLocation = AppDomain.CurrentDomain.BaseDirectory;
             IniFile serverFile;
+            bool result = false;
             if (!File.Exists(appLocation + "servers.ini"))
             {
                 serverFile = new IniFile(appLocation + "servers.ini");
-                int port;
+                int port = 0;
                 string server, nick, owner, name;
                 //assume first run, start application setup.
                 Console.WriteLine("Welcome to Better CSharp IRC Bot! It seems the server INI file is missing, so let's get a server set up for you.");
                 Console.WriteLine();
                 Console.Write("Enter the address of the server: ");
                 server = Console.ReadLine();
-                Console.Write("Enter a port for the bot (Usually 6667):");
-                port = Convert.ToInt32(Console.ReadLine());
+                while (!result)
+                {
+                    Console.Write("Enter a port for the bot (Usually 6667): ");
+                    result = Int32.TryParse(Console.ReadLine(), out port);
+                    if (!result)
+                    {
+                        Console.WriteLine("The port you entered is invalid. Try again.");
+                    }
+                }
                 Console.Write("Enter a nick for the bot: ");
                 nick = Console.ReadLine();
                 Console.Write("Enter an owner for the bot (This is you!): ");
                 owner = Console.ReadLine();
                 Console.Write("Enter a real name for the bot (OPTIONAL): ");
                 name = Console.ReadLine();
-                if (name == "") name = nick;
+                if (name.Equals("")) name = nick;
 
                 //All done, now to save this information to the disk
                 serverFile.IniWriteValue("Server", "Server0", server);
@@ -65,7 +73,7 @@ namespace Better_CSharp_IRC_Bot
                     Convert.ToInt32(connectServer.IniReadValue("Config", "Port")), connectServer.IniReadValue("Config", "Owner")));
             }
             //At this point, many foreground threads are made for each server and channel, so the main thread can close and allow the server and
-            //channel threads to operate independently.
+            //channel threads to operate independently. If all threads close from connection issues, the application itself will close.
         }
     }
 }
