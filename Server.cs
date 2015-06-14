@@ -13,7 +13,6 @@ namespace Better_CSharp_IRC_Bot
         protected string nick, server, realName, owner;
         protected int port;
         List<string> chans = new List<string>();
-        List<Chan> chanList = new List<Chan>();
         System.IO.TextReader input;
         System.IO.TextWriter output;
         bool connections = false;
@@ -67,7 +66,6 @@ namespace Better_CSharp_IRC_Bot
         protected void connectToServer(string nick, string server, string realName, int port)
         {
             System.Net.Sockets.TcpClient sock = new System.Net.Sockets.TcpClient();
-
             sock.Connect(server, port);
             if (!sock.Connected)
             {
@@ -78,24 +76,16 @@ namespace Better_CSharp_IRC_Bot
 
             input = new System.IO.StreamReader(sock.GetStream());
             output = new System.IO.StreamWriter(sock.GetStream());
-            sendText("NOTICE " + owner + " " + nick + " is now LOGGED ON." + "\r\n");
+            //sendText("NOTICE " + owner + " " + nick + " is now LOGGED ON.");
             //Establish connection using nick.
-            sendText("USER " + nick + " * 0 :" + realName + "\r\n" + "NICK " + nick + "\r\n");
-            
+            sendText("USER " + nick + " * 0 :" + realName);
+            sendText("NICK " + nick);
             string buf;
             try
             {
                 for (buf = input.ReadLine(); ; buf = input.ReadLine())
                 {
-                    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\LOG.txt"))
-                    {
-                        if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\logs\\"))
-                        {
-                            Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\logs\\");
-                        }
-                        File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\logs\\" + DateTime.Now.ToString("dd-MM-yyyy") + ".txt", "[CHANNEL CLASS] [" + System.DateTime.Now.ToShortTimeString() + "] " + buf + Environment.NewLine);
-                        
-                    }
+                    Console.WriteLine(buf);
                     if (!buf.Equals(""))
                     {
                         if (buf.Split(' ')[1] == "001" && !connections)
@@ -103,12 +93,12 @@ namespace Better_CSharp_IRC_Bot
                             connections = true;
                             foreach (string s in chans)
                             {
-                                chanList.Add(new Chan(s, input, output, nick, server));
+                                connectToChannel(s);
                             }
                         }
                     }
-                    if (buf.Contains("PING")) { sendText(buf.Replace("PING", "PONG") + "\r\n"); Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + 
-                        "Replied to a PING request (Server class)."); }
+                    string response = CommandManager.parse(buf);
+                    if (response != null) sendText(response);
                 }
             }
             catch (Exception ex)
@@ -124,8 +114,41 @@ namespace Better_CSharp_IRC_Bot
         /// <param name="s">The text to write to the server. DOES NOT include return characters</param>
         private void sendText(string s)
         {
-            output.Write(s);
+            output.Write(s + "\r\n");
             output.Flush();
+        }
+
+        /// <summary>
+        /// Connects to a defined channel.
+        /// </summary>
+        /// <param name="s">The channel to connect to. # symbol for channel is optional.</param>
+        private void connectToChannel(string s)
+        {
+            if (s.StartsWith("#"))
+            {
+                try
+                {
+                    sendText("JOIN " + s);
+                    Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Successfully joined " + s + ".");
+                }
+                catch
+                {
+                    Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Failed to connect to channel " + s + ". Quitting the attempt...");
+                }
+            }
+            else
+            {
+                try
+                {
+                    sendText("JOIN #" + s);
+                    Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Successfully joined #" + s + ".");
+                }
+                catch
+                {
+                    Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Failed to connect to channel #" + s + ". Quitting the attempt...");
+                    return;
+                }
+            }
         }
     }
 }

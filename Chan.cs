@@ -37,7 +37,7 @@ namespace Better_CSharp_IRC_Bot
             string buf;
             try
             {
-                sendText("JOIN " + channel + "\r\n");
+                sendText("JOIN " + channel);
                 Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Successfully joined " + channel + ".");
             }
             catch
@@ -49,24 +49,16 @@ namespace Better_CSharp_IRC_Bot
             {
                 for (buf = input.ReadLine(); ; buf = input.ReadLine())
                 {
-                    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\LOG.txt"))
-                    {
-                        if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\logs\\"))
-                        {
-                            Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\logs\\");
-                        }
-                        File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "\\" + server + "\\logs\\" + DateTime.Now.ToString("dd-MM-yyyy") + ".txt", "[CHANNEL CLASS] [" + System.DateTime.Now.ToShortTimeString() + "] " + buf + Environment.NewLine);
-                    }
-                    if (buf.Contains("PING")) { sendText(buf.Replace("PING", "PONG") + "\r\n"); Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Replied to a PING request (Chan class)."); }
-                    if (buf.Contains(channel + " :!meep")) { sendText("PRIVMSG " + channel + " :" + "meep. Got me!\r\n"); }
+                    if (buf.Contains("PING")) { sendText(buf.Replace("PING", "PONG")); Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Replied to a PING request (Chan class)."); }
+                    if (buf.Contains(channel + " :!meep")) { sendText("PRIVMSG " + channel + " :" + "meep. Got me!"); }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "ERROR: " + ex.ToString());
                 Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Abandoning channel " + channel + "!");
-                sendText("PRIVMSG " + channel + " :" + "An error has occured! Leaving channel!\r\n");
-                sendText("PART " + channel + " An error in the application requires this thread be closed. The bot will have to be restarted to rejoin this channel.\r\n");
+                sendText("PRIVMSG " + channel + " :" + "An error has occured! Leaving channel!");
+                sendText("PART " + channel + " An error in the application requires this thread be closed. The bot will have to be restarted to rejoin this channel.");
             }
             
         }
@@ -74,10 +66,10 @@ namespace Better_CSharp_IRC_Bot
         /// <summary>
         /// Sends a string of text to the IRC server.
         /// </summary>
-        /// <param name="s">The text to write to the server. DOES NOT include return characters</param>
+        /// <param name="s">The text to write to the server. DOES include return characters</param>
         private void sendText(string s)
         {
-            output.Write(s);
+            output.Write(s + "\r\n");
             output.Flush();
         }
     }
