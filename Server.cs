@@ -15,6 +15,7 @@ namespace Better_CSharp_IRC_Bot
         List<string> chans = new List<string>();
         System.IO.TextReader input;
         System.IO.TextWriter output;
+        CommandManager cm;
         bool connections = false;
         /// <summary>
         /// Start a new connection to a server.
@@ -29,6 +30,7 @@ namespace Better_CSharp_IRC_Bot
             this.port = port;
             realName = nick; //Set this as a default value.
             this.owner = owner;
+            cm = new CommandManager(nick);
             startConnection();
         }
 
@@ -46,6 +48,7 @@ namespace Better_CSharp_IRC_Bot
             this.port = port;
             this.realName = realName;
             this.owner = owner;
+            cm = new CommandManager(nick);
             startConnection();
         }
 
@@ -85,11 +88,12 @@ namespace Better_CSharp_IRC_Bot
             {
                 for (buf = input.ReadLine(); ; buf = input.ReadLine())
                 {
-                    Console.WriteLine(buf);
+                    //Console.WriteLine(buf);
                     if (!buf.Equals(""))
                     {
                         if (buf.Split(' ')[1] == "001" && !connections)
                         {
+                            Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Got the 001 command, joining channels...");
                             connections = true;
                             foreach (string s in chans)
                             {
@@ -97,7 +101,7 @@ namespace Better_CSharp_IRC_Bot
                             }
                         }
                     }
-                    string response = CommandManager.parse(buf);
+                    string response = cm.parse(buf);
                     if (response != null) sendText(response);
                 }
             }
@@ -105,6 +109,7 @@ namespace Better_CSharp_IRC_Bot
                 {
                     Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "ERROR: " + ex.ToString());
                     Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Abandoning connection!");
+                    //Console.ReadKey();
                 }
         }
 
