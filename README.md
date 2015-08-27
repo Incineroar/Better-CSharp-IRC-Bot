@@ -14,7 +14,7 @@ This is a simple IRC bot written in C#. Functions:
 
 ## Known Bugs
 - Logging is in the process of being repaired
-- Initial setup does not ask for any channels. Users must manually add a chans.ini file with channels defined in it (This will be fixed soon though)
+- Initial setup does not ask for any channels. Users must manually add a chans.ini file with channels defined in it (Fixed for later publishing)
 
 ## To use this bot
 To run the bot on your own server, simply build and start the application and follow the simple startup guide in the command prompt window. After the initial setup, it will save your settings to the application's directory, then hook up to the server that you defined. You must be running .NET 4 at minimum (Although if you adjust this in the Properties, you may be able to get it to build with an older version of .NET, although this hasn't been tested as of yet).
