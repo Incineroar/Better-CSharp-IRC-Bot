@@ -17,6 +17,8 @@ namespace Better_CSharp_IRC_Bot
         System.IO.TextWriter output;
         CommandManager cm;
         bool connections = false;
+        System.Net.Sockets.TcpClient sock;
+
         /// <summary>
         /// Start a new connection to a server.
         /// </summary>
@@ -30,7 +32,7 @@ namespace Better_CSharp_IRC_Bot
             this.port = port;
             realName = nick; //Set this as a default value.
             this.owner = owner;
-            cm = new CommandManager(nick);
+            cm = new CommandManager(nick, owner);
             startConnection();
         }
 
@@ -48,7 +50,7 @@ namespace Better_CSharp_IRC_Bot
             this.port = port;
             this.realName = realName;
             this.owner = owner;
-            cm = new CommandManager(nick);
+            cm = new CommandManager(nick, owner);
             startConnection();
         }
 
@@ -68,7 +70,7 @@ namespace Better_CSharp_IRC_Bot
 
         protected void connectToServer(string nick, string server, string realName, int port)
         {
-            System.Net.Sockets.TcpClient sock = new System.Net.Sockets.TcpClient();
+            sock = new System.Net.Sockets.TcpClient();
             sock.Connect(server, port);
             if (!sock.Connected)
             {
@@ -88,7 +90,7 @@ namespace Better_CSharp_IRC_Bot
             {
                 for (buf = input.ReadLine(); ; buf = input.ReadLine())
                 {
-                    //Console.WriteLine(buf);
+                    Console.WriteLine(buf);
                     if (!buf.Equals(""))
                     {
                         if (buf.Split(' ')[1] == "001" && !connections)
@@ -101,16 +103,32 @@ namespace Better_CSharp_IRC_Bot
                             }
                         }
                     }
+                    if (buf.StartsWith("PING"))
+                    {
+                        Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Replied to a PING request sent from the server.");
+                        sendText(buf.Replace("PING", "PONG"));
+                    }
                     string response = cm.parse(buf);
+                    if (response != null)
+                    {
+                        if (response.Contains("93J13QjAQiaxBvrMCpk3"))
+                        {
+                            string tmp = response.Remove(0, 21);
+                            shutdown(tmp);
+                            return;
+                        }
+                    }
                     if (response != null) sendText(response);
                 }
             }
             catch (Exception ex)
-                {
-                    Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "ERROR: " + ex.ToString());
-                    Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Abandoning connection!");
-                    //Console.ReadKey();
-                }
+            {
+                Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "ERROR: " + ex.ToString());
+                Console.WriteLine("[" + System.DateTime.Now.ToShortTimeString() + "] " + "Abandoning connection!");
+                shutdown("An error has occured and the application needs to close.");
+                //Console.Beep();
+                Console.ReadKey();
+            }
         }
 
         /// <summary>
@@ -154,6 +172,38 @@ namespace Better_CSharp_IRC_Bot
                     return;
                 }
             }
+        }
+
+        public void shutdown(string reason)
+        {
+            string x = reason;
+            foreach (string s in chans)
+            {
+                if (s.StartsWith("#"))
+                {
+                    try
+                    {
+                        sendText("PART " + s + " :" + x);
+                    }
+                    catch
+                    {
+                        
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        sendText("PART #" + s + " :" + x);
+                    }
+                    catch
+                    {
+                        
+                    }
+                }
+            }
+            sendText("QUIT");
+            sock.Close();
         }
     }
 }
